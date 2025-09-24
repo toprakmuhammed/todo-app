@@ -4,7 +4,7 @@ A simple and elegant **Todo List application** built with **HTML, CSS, and JavaS
 Manage your daily tasks with add, delete, complete, filter, and persistence features.  
 
 <p align="center">
-  <img src="./images/todo-app-screenshot.png" alt="App Screenshot" width="400"/>
+  <img src="./images/todo-app-screenshot.png" alt="App Screenshot" width="400" style="border-radius:10px;"/>
 </p>
 
 ---
