@@ -33,7 +33,8 @@ function addTodo(text) {
   todos.push(todo);
 
   saveTodos();
-  //render Todos
+  renderTodos();
+  taskInput.value = "";
 }
 
 function saveTodos() {
@@ -43,15 +44,15 @@ function saveTodos() {
 }
 
 function updateItemsCount() {
-  const upcompletedTodos = todos.filter((todo) => !todo.completed);
-  itemsLeft.textContent = `${uncompletedTodos.length} item${
-    uncompletedTodos.length !== 1 ? "s" : ""
+  const uncompletedTodos = todos.filter((todo) => !todo.completed);
+  itemsLeft.textContent = `${uncompletedTodos?.length} item${
+    uncompletedTodos?.length !== 1 ? "s" : ""
   } left`;
 }
 
 function checkEmptyState() {
   const filteredTodos = filterTodos(currentFilter);
-  if (filteredTodos.length === 0) emptyState.classList.remove("hidden");
+  if (filteredTodos?.length === 0) emptyState.classList.remove("hidden");
   else emptyState.classList.add("hidden");
 }
 
@@ -108,4 +109,64 @@ function renderTodos() {
   });
 }
 
-function clearCompleted() {}
+function clearCompleted() {
+  todos = todos.filter((todo) => !todo.completed);
+  saveTodos();
+  renderTodos();
+}
+
+function toggleTodo(id) {
+  todos = todos.map((todo) => {
+    if (todo.id === id) {
+      return { ...todo, completed: !todo.completed };
+    }
+
+    return todo;
+  });
+  saveTodos();
+  renderTodos();
+}
+
+function deleteTodo(id) {
+  todos = todos.filter((todo) => todo.id !== id);
+  saveTodos();
+  renderTodos();
+}
+
+function loadTodos() {
+  const storedTodos = localStorage.getItem("todos");
+  if (storedTodos) todos = JSON.parse(storedTodos);
+  renderTodos();
+}
+
+filters.forEach((filter) => {
+  filter.addEventListener("click", () => {
+    setActiveFilter(filter.getAttribute("data-filter"));
+  });
+});
+
+function setActiveFilter(filter) {
+  currentFilter = filter;
+
+  filters.forEach((item) => {
+    if (item.getAttribute("data-filter") === filter) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+
+  renderTodos();
+}
+
+function setDate() {
+  const options = { weekday: "long", month: "short", day: "numeric" };
+  const today = new Date();
+  dateElement.textContent = today.toLocaleDateString("en-US", options);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  loadTodos();
+  updateItemsCount();
+  setDate();
+});
